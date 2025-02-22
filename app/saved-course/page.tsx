@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
-import { getAllCourses } from "../actions";
-import CourseCard from "../components/course-card";
+import { getAllCourses } from "@/app/actions/course";
+import CourseCard from "@/app/components/course-card";
 
 export default async function SearchPage({
   searchParams,
@@ -9,7 +9,7 @@ export default async function SearchPage({
 }) {
 
   const page = Number((await searchParams).page) || 0
-
+  console.log(page)
   const courses = await getAllCourses()
   console.log(courses)
   

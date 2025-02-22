@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { getAllCourses } from "@/app/actions";
+import { getAllCourses } from "@/app/actions/course";
 import CourseCard from "@/app/components/course-card";
 
 export default async function SearchPage({

@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { getAllCourses } from "../actions";
+import { getAllCourses } from "@/app/actions/course";
 import CourseCard from "../components/course-card";
 
 export default async function MyPage({

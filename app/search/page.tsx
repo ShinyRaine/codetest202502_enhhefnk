@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
-import SearchInput from "../components/search-input";
-import { getAllCourses } from "../actions";
-import CourseCard from "../components/course-card";
+import SearchInput from "@/app/components/search-input";
+import { getAllCourses } from "@/app/actions/course";
+import CourseCard from "@/app/components/course-card";
 
 export default async function SearchPage({
   searchParams,
