@@ -33,7 +33,12 @@ export const courseTable = pgTable("course", {
   categoryId: integer().references(() => categoryTable.id),
 });
 
-// export const courseCategoryTable = pgTable("course_category", {
-//   courseId: varchar({ length: 255 }).notNull().references(() => courseTable.courseId),
-//   categoryId: integer().notNull().references(() => categoryTable.id),
-// });
+export const searchTable = pgTable("search", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  text: text().notNull(),
+});
+
+export const savedCourseTable = pgTable("saved_course", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  courseId: varchar({ length: 255 }).references(() => courseTable.courseId),
+});
