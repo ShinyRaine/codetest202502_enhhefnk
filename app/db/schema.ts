@@ -42,3 +42,8 @@ export const savedCourseTable = pgTable("saved_course", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   courseId: varchar({ length: 255 }).references(() => courseTable.courseId),
 });
+
+export const applyedCourseTable = pgTable("applyed_course", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  courseId: varchar({ length: 255 }).references(() => courseTable.courseId),
+});
