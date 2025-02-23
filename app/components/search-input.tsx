@@ -1,17 +1,14 @@
-'use client'
-
 import { Box, Button, Input } from "@mui/material";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import Form from "next/form";
 
 
 export default function SearchInput() {
-  const [text, setText] = useState('')
-  const router = useRouter()
   return (
-    <Box sx={{ display: 'flex', gap: '12px' }}>
-      <Input placeholder="Search for Courses" onChange={e => setText(e.target.value)} />
-      <Button variant="contained" onClick={() => router.push(`/search?text=${text}`)}>Search</Button>
-    </Box>
+    <Form action={"/search"}>
+      <Box sx={{ display: 'flex', gap: '12px' }}>
+        <Input placeholder="Search for Courses" name="text" />
+        <Button variant="contained" type="submit">Search</Button>
+      </Box>
+    </Form>
   )
 }

@@ -1,6 +1,6 @@
-import { Box, Button, Card, CardActions, CardContent, Typography } from "@mui/material";
-import Link from "next/link";
+import { Box,  Card, CardContent, Typography } from "@mui/material";
 import SaveButton from "./save-button";
+import ApplyButton from "./apply-button";
 
 export default function CourseCard(
   { course, type }:
@@ -28,13 +28,15 @@ export default function CourseCard(
           <Typography variant="body2">Start Time: {course.startDate.toLocaleDateString()}</Typography>
         </Box>
         <Box sx={{ textAlign: 'right'}}>
-          <SaveButton courseId={course.courseId} initialStatus={course.isSaved} />
+          {type !== 'display'
+           ? <SaveButton courseId={course.courseId} initialStatus={course.isSaved} />
+           : null}
           <Typography variant="body2">{course.delivery}</Typography>
           <Typography variant="body2">{course.language}</Typography>
         </Box>
       </CardContent>
       {type !== 'display'
-      ? <CardActions sx={{ justifyContent: 'right'}}><Link href={`/apply?id=${course.courseId}`}><Button variant="contained">Apply</Button></Link></CardActions>
+      ? <ApplyButton course={course} />
       : null}
     </Card>
   );

@@ -1,10 +1,12 @@
+import { Course } from "@/app/type"
+
 function nulToUndefined(v: unknown){
   if(v === null) return undefined
   return v
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function covertToCourse(course: any) {
+export function covertToCourse(course: any): Course {
   return {
     courseId: course.courseId,
     courseName: course.courseName,

@@ -1,6 +1,6 @@
 'use server'
 import { db } from '@/app/db'
-import { applyedCourseTable, categoryTable, courseTable, deliveryTable, instituteTable, languageTable, locationTable, savedCourseTable } from '@/app/db/schema'
+import { categoryTable, courseTable, deliveryTable, instituteTable, languageTable, locationTable, savedCourseTable } from '@/app/db/schema'
 import { asc, eq } from 'drizzle-orm'
 import { covertToCourse } from './lib'
 
@@ -72,34 +72,4 @@ export async function getCourseById(courseId: string) {
     .execute())[0]
 
   return covertToCourse(course)
-}
-
-export async function applyCourse(courseId: string, name: string, email: string, phone: string) {
-  // send name, email, phone to server
-  console.log(name, email, phone)
-  return await db.insert(applyedCourseTable).values({courseId}).execute()
-}
-export async function getAppliedCourses() {
-  const list = await db
-    .select({
-      courseId: courseTable.courseId,
-      courseName: courseTable.courseName,
-      startDate: courseTable.startDate,
-      institute: instituteTable.name,
-      category: categoryTable.name,
-      location: locationTable.name,
-      delivery: deliveryTable.name,
-      language: languageTable.name,
-      saveId: savedCourseTable.id,
-    }).from(applyedCourseTable)
-    .where(eq(applyedCourseTable.courseId, courseTable.courseId))
-    .leftJoin(courseTable, eq(applyedCourseTable.courseId, courseTable.courseId))
-    .leftJoin(instituteTable, eq(courseTable.instituteId, instituteTable.id))
-    .leftJoin(categoryTable, eq(courseTable.categoryId, categoryTable.id))
-    .leftJoin(languageTable, eq(courseTable.languageId, languageTable.id))
-    .leftJoin(locationTable, eq(courseTable.locationId, locationTable.id))
-    .leftJoin(deliveryTable, eq(courseTable.deliveryId, deliveryTable.id))
-    .groupBy(courseTable.courseId, instituteTable.id, categoryTable.id, languageTable.id, locationTable.id, deliveryTable.id, savedCourseTable.id)
-    .execute()
-  return list.map(covertToCourse)
 }
