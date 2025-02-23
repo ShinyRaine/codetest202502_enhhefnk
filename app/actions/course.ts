@@ -1,7 +1,8 @@
 'use server'
 import { db } from '@/app/db'
-import { categoryTable, courseTable, deliveryTable, instituteTable, languageTable, locationTable } from '@/app/db/schema'
-import { eq } from 'drizzle-orm'
+import { applyedCourseTable, categoryTable, courseTable, deliveryTable, instituteTable, languageTable, locationTable, savedCourseTable } from '@/app/db/schema'
+import { asc, eq } from 'drizzle-orm'
+import { covertToCourse } from './lib'
 
 export async function getAllCategories() {
   return await db.select().from(categoryTable).execute()
@@ -18,7 +19,7 @@ export async function getAllLanguages() {
 export async function getAllLocations() {
   return await db.select().from(locationTable).execute()
 }
-export async function getAllCourses() {
+export async function getAllCourses(page: number, pageSize: number = 10) {
 
   const courses = await db
     .select({
@@ -30,37 +31,24 @@ export async function getAllCourses() {
       location: locationTable.name,
       delivery: deliveryTable.name,
       language: languageTable.name,
+      saveId: savedCourseTable.id,
     }).from(courseTable)
     .leftJoin(instituteTable, eq(courseTable.instituteId, instituteTable.id))
     .leftJoin(categoryTable, eq(courseTable.categoryId, categoryTable.id))
     .leftJoin(languageTable, eq(courseTable.languageId, languageTable.id))
     .leftJoin(locationTable, eq(courseTable.locationId, locationTable.id))
     .leftJoin(deliveryTable, eq(courseTable.deliveryId, deliveryTable.id))
-    .groupBy(courseTable.courseId, instituteTable.id, categoryTable.id, languageTable.id, locationTable.id, deliveryTable.id)
+    .leftJoin(savedCourseTable, eq(savedCourseTable.courseId, courseTable.courseId))
+    .groupBy(courseTable.courseId, instituteTable.id, categoryTable.id, languageTable.id, locationTable.id, deliveryTable.id, savedCourseTable.id)
+    .orderBy(asc(courseTable.courseId)) // order by first_name (non-unique), id (pk)
+    .limit(pageSize) 
+    .offset(page * pageSize)
     .execute()
 
   return courses.map(covertToCourse)
 }
 
-function nulToUndefined(v: unknown){
-  if(v === null) return undefined
-  return v
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function covertToCourse(course: any) {
-  return {
-    courseId: course.courseId,
-    courseName: course.courseName,
-    startDate: course.startDate,
-    institute: nulToUndefined(course.institute) as string,
-    category: nulToUndefined(course.category) as string,
-    location: nulToUndefined(course.location) as string,
-    delivery: nulToUndefined(course.delivery) as string,
-  }
-}
-
-export async function getCourse(courseId: string) {
+export async function getCourseById(courseId: string) {
   const course = (await db
     .select({
       courseId: courseTable.courseId,
@@ -71,6 +59,7 @@ export async function getCourse(courseId: string) {
       location: locationTable.name,
       delivery: deliveryTable.name,
       language: languageTable.name,
+      saveId: savedCourseTable.id,
     }).from(courseTable)
     .where(eq(courseTable.courseId, courseId))
     .leftJoin(instituteTable, eq(courseTable.instituteId, instituteTable.id))
@@ -78,8 +67,39 @@ export async function getCourse(courseId: string) {
     .leftJoin(languageTable, eq(courseTable.languageId, languageTable.id))
     .leftJoin(locationTable, eq(courseTable.locationId, locationTable.id))
     .leftJoin(deliveryTable, eq(courseTable.deliveryId, deliveryTable.id))
-    .groupBy(courseTable.courseId, instituteTable.id, categoryTable.id, languageTable.id, locationTable.id, deliveryTable.id)
+    .leftJoin(savedCourseTable, eq(savedCourseTable.courseId, courseTable.courseId))
+    .groupBy(courseTable.courseId, instituteTable.id, categoryTable.id, languageTable.id, locationTable.id, deliveryTable.id, savedCourseTable.id)
     .execute())[0]
 
   return covertToCourse(course)
+}
+
+export async function applyCourse(courseId: string, name: string, email: string, phone: string) {
+  // send name, email, phone to server
+  console.log(name, email, phone)
+  return await db.insert(applyedCourseTable).values({courseId}).execute()
+}
+export async function getAppliedCourses() {
+  const list = await db
+    .select({
+      courseId: courseTable.courseId,
+      courseName: courseTable.courseName,
+      startDate: courseTable.startDate,
+      institute: instituteTable.name,
+      category: categoryTable.name,
+      location: locationTable.name,
+      delivery: deliveryTable.name,
+      language: languageTable.name,
+      saveId: savedCourseTable.id,
+    }).from(applyedCourseTable)
+    .where(eq(applyedCourseTable.courseId, courseTable.courseId))
+    .leftJoin(courseTable, eq(applyedCourseTable.courseId, courseTable.courseId))
+    .leftJoin(instituteTable, eq(courseTable.instituteId, instituteTable.id))
+    .leftJoin(categoryTable, eq(courseTable.categoryId, categoryTable.id))
+    .leftJoin(languageTable, eq(courseTable.languageId, languageTable.id))
+    .leftJoin(locationTable, eq(courseTable.locationId, locationTable.id))
+    .leftJoin(deliveryTable, eq(courseTable.deliveryId, deliveryTable.id))
+    .groupBy(courseTable.courseId, instituteTable.id, categoryTable.id, languageTable.id, locationTable.id, deliveryTable.id, savedCourseTable.id)
+    .execute()
+  return list.map(covertToCourse)
 }

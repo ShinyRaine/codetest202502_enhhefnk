@@ -1,17 +1,9 @@
 import { Box, Typography } from "@mui/material";
-import { getAllCourses } from "@/app/actions/course";
+import { getAppliedCourses } from "@/app/actions/course";
 import CourseCard from "../components/course-card";
 
-export default async function MyPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
-}) {
-
-  const page = Number((await searchParams).page) || 0
-  console.log(page)
-  const courses = await getAllCourses()
-  
+export default async function MyPage() {
+  const courses = await getAppliedCourses()
   return (
     <Box sx={{ display: 'flex',
       flexDirection: 'column',

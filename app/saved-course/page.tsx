@@ -1,27 +1,16 @@
 import { Box, Typography } from "@mui/material";
-import { getAllCourses } from "@/app/actions/course";
+import { getSavedCourses } from "@/app/actions/collection";
 import CourseCard from "@/app/components/course-card";
 
-export default async function SearchPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
-}) {
+export default async function SearchPage() {
 
-  const page = Number((await searchParams).page) || 0
-  console.log(page)
-  const courses = await getAllCourses()
-  console.log(courses)
+  const courses = await getSavedCourses()
   
   return (
-    <Box sx={{ display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      gap: '12px',
-      padding: '24px'
-    }}>
-      <Typography variant="h2">Saved Courses</Typography>
-      <Box>
+    <Box sx={{ padding: '24px' }}>
+      <Typography variant="h2" sx={{textAlign: 'center',}}>Saved Courses</Typography>
+      {courses.length === 0 && <Typography variant="h4" sx={{color: 'text.secondary'}}>No saved courses</Typography>}
+      <Box sx={{mt: '24px'}}>
         {courses.map(course => <CourseCard key={course.courseId} course={course} />)}
       </Box>
     </Box>

@@ -1,6 +1,6 @@
-import { Box, Button, Card, CardActions, CardContent, IconButton, Typography } from "@mui/material";
-import StarOutlineIcon from '@mui/icons-material/StarOutline';
+import { Box, Button, Card, CardActions, CardContent, Typography } from "@mui/material";
 import Link from "next/link";
+import SaveButton from "./save-button";
 
 export default function CourseCard(
   { course, type }:
@@ -12,7 +12,8 @@ export default function CourseCard(
       category?: string,
       institute?: string,
       location?: string,
-      delivery?: string
+      delivery?: string,
+      isSaved?: boolean
     },
     type?: string
   }
@@ -27,7 +28,7 @@ export default function CourseCard(
           <Typography variant="body2">Start Time: {course.startDate.toLocaleDateString()}</Typography>
         </Box>
         <Box sx={{ textAlign: 'right'}}>
-          <IconButton><StarOutlineIcon /></IconButton>
+          <SaveButton courseId={course.courseId} initialStatus={course.isSaved} />
           <Typography variant="body2">{course.delivery}</Typography>
           <Typography variant="body2">{course.language}</Typography>
         </Box>

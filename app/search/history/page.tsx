@@ -12,7 +12,7 @@ export default async function SearchPage({
   const page = Number((await searchParams).page) || 0
 
   console.log(text, page)
-  const courses = await getAllCourses()
+  const courses = await getAllCourses(page)
   console.log(courses)
   
   return (

@@ -1,5 +1,5 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { getCourse } from "@/app/actions/course";
+import { getCourseById } from "@/app/actions/course";
 import Form from 'next/form';
 
 export default async function MyPage({
@@ -8,7 +8,7 @@ export default async function MyPage({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
   const courseId = (await searchParams).id as string
-  const course = await getCourse(courseId)
+  const course = await getCourseById(courseId)
   const handleSubmit = async (formData: FormData) => {
     'use server'
     console.log(formData)
