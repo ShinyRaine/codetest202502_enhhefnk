@@ -10,3 +10,7 @@ export async function saveSearch(text: string) {
 export async function removeSavedSearch(id: number) {
   return await db.delete(searchTable).where(eq(searchTable.id, id)).execute()
 }
+
+export async function getAllSearch() {
+  return await db.select().from(searchTable).execute()
+}

@@ -3,6 +3,7 @@ import Form from "next/form";
 import { getAllCategories, getAllDeliveries, getAllInstitutes, getAllLanguages, getAllLocations } from "../actions/course";
 import FormSelect from "./select";
 import SaveSearchButton from "./save-search-button";
+import SearchHistory from "./search-history";
 
 export default async function SearchInput({
   initialVals
@@ -35,7 +36,7 @@ export default async function SearchInput({
         </Grid>
         <Grid size={6}>
           <TextField variant="standard" sx={{width: '100%'}} 
-            defaultValue={initialVals?.text} label="Search for Courses" placeholder="Name" name="text"/>
+            defaultValue={initialVals?.text} label="Search for Courses" name="text"/>
         </Grid>
         <Grid size={3}>
           <FormSelect name="deliveryMethod" label="Delivery Method"
@@ -52,6 +53,7 @@ export default async function SearchInput({
         <Grid size={3} sx={{alignContent: 'end', display: 'flex', alignItems: 'end', gap: '4px'}}>
           <Button variant="contained" type="submit">Search</Button>
           {initialVals ? <SaveSearchButton /> : null}
+          <SearchHistory />
         </Grid>
       </Grid>
     </Form>
