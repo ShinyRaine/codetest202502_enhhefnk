@@ -1,7 +1,8 @@
 import { Box } from "@mui/material";
 import SearchInput from "@/app/components/search-input";
-import { getAllCourses } from "@/app/actions/course";
+import { searchCourses } from "@/app/actions/course";
 import CourseCard from "@/app/components/course-card";
+import SearchPagination from "../components/search-pagination";
 
 export default async function SearchPage({
   searchParams,
@@ -20,7 +21,10 @@ export default async function SearchPage({
     location: Number((await searchParams).location as string),
   }
 
-  const courses = await getAllCourses(page)
+  const {courses, total} = await searchCourses({
+    ...initialValues,
+    page
+  })
   
   return (
     <Box sx={{ padding: '24px' }}>
@@ -28,6 +32,7 @@ export default async function SearchPage({
       <Box>
         {courses.map(course => <CourseCard key={course.courseId} course={course} />)}
       </Box>
+      <SearchPagination page={page} total={total} />
     </Box>
   )
 }

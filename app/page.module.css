@@ -1,9 +1,0 @@
-.page {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-  width: 100vw;
-  padding-top: 20%;
-  gap: 24px;
-}

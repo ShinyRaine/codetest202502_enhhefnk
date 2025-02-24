@@ -21,6 +21,7 @@ export default function FormSelect(props: SelectProps &
         value={value}
         onChange={handleChange}
       >
+        <MenuItem value="">N/A</MenuItem>
         {props.list.map(item => <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>)}
       </Select>
     </FormControl>

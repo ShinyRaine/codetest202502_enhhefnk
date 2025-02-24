@@ -23,8 +23,8 @@ export default async function SearchInput({
   const locations = await getAllLocations()
 
   return (
-    <Form action={"/search"}>
-      <Grid container spacing={2} sx={{}}>
+    <Form action={"/search"} style={{width: '100%'}}>
+      <Grid container spacing={2}>
         <Grid size={3}>
           <FormSelect name="language" label="Language"
             defaultValue={initialVals?.language} list={languages} />
@@ -51,7 +51,7 @@ export default async function SearchInput({
         </Grid>
         <Grid size={3} sx={{alignContent: 'end', display: 'flex', alignItems: 'end', gap: '4px'}}>
           <Button variant="contained" type="submit">Search</Button>
-          <SaveSearchButton />
+          {initialVals ? <SaveSearchButton /> : null}
         </Grid>
       </Grid>
     </Form>
