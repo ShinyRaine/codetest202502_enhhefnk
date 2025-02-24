@@ -21,6 +21,6 @@ export async function PUT(req: NextRequest) {
     return Response.json({message: 'success'});
   } catch (error) {
     console.error(error)
-    return Response.error()
+    return new Response(JSON.stringify({message: 'server error'}), {status: 500})
   }
 }

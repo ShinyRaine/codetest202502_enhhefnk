@@ -3,6 +3,7 @@ import SearchInput from "@/app/components/search-input";
 import { searchCourses } from "@/app/actions/course";
 import CourseCard from "@/app/components/course-card";
 import SearchPagination from "../components/search-pagination";
+import Empty from "../components/empty";
 
 export default async function SearchPage({
   searchParams,
@@ -29,10 +30,15 @@ export default async function SearchPage({
   return (
     <Box sx={{ padding: '24px' }}>
       <SearchInput initialVals={initialValues} />
-      <Box>
-        {courses.map(course => <CourseCard key={course.courseId} course={course} />)}
-      </Box>
-      <SearchPagination page={page} total={total} />
+      {
+        total === 0 ? <Empty /> : <>
+          <Box>
+            {courses.map(course => <CourseCard key={course.courseId} course={course} />)}
+          </Box>
+          <SearchPagination page={page} total={total} />
+        </>
+      }
+      
     </Box>
   )
 }

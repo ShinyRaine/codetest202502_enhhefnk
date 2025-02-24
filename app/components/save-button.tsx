@@ -1,6 +1,6 @@
 'use client'
 
-import { IconButton } from "@mui/material"
+import { IconButton, Snackbar } from "@mui/material"
 import { useState } from "react"
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import StarIcon from '@mui/icons-material/Star';
@@ -13,6 +13,9 @@ export default function SaveButton(
   }
 ) {
   const [isSaved, setIsSaved] = useState(initialStatus || false)
+  const [noticeOpen, setNoticeOpen] = useState(false)
+  const [noticeMsg, setNoticeMsg] = useState('false')
+
   const handleToggleSave = async () => {
     try {
       const api = isSaved ? 'remove-saved-course' : 'save-course'
@@ -20,13 +23,25 @@ export default function SaveButton(
         method: isSaved ? 'DELETE' : 'PUT'
       })
       setIsSaved(!isSaved)
+      setNoticeMsg(isSaved ? 'remove succeed' : 'save succeed')
+      setNoticeOpen(true)
     } catch (error) {
       console.error(error)
+      setNoticeMsg('save failed')
+      setNoticeOpen(true)
     }
   }
   return (
+    <>
     <IconButton onClick={handleToggleSave}>
       {isSaved ? <StarIcon color="primary" /> : <StarOutlineIcon />}
     </IconButton>
+    <Snackbar
+      open={noticeOpen}
+      autoHideDuration={3000}
+      onClose={() => setNoticeOpen(false)}
+      message={noticeMsg}
+    />
+    </>
   );
 }

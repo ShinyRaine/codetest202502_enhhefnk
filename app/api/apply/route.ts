@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
       return new Response(JSON.stringify({message: 'course has been applied'}), {status: 400}) 
     }
     // send infomation
-    console.log(courseId, name, email, phone, !courseId || !name || (!email && !phone))
+    console.log(courseId, name, email, phone)
     if(!courseId || !name || (!email && !phone)) {
       return new Response(JSON.stringify({message: 'pramaters error'}), {status: 400})
     }
@@ -21,6 +21,6 @@ export async function POST(req: NextRequest) {
     return Response.json({ message: 'apply success' });
   } catch (error) {
     console.error(error)
-    return Response.error()
+    return new Response(JSON.stringify({message: 'server error'}), {status: 500})
   }
 }

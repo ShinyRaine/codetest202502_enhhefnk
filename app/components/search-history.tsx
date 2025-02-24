@@ -36,11 +36,11 @@ export default function SearchHistory() {
   );
 
   return (
-    <div>
+    <>
       <IconButton onClick={toggleDrawer(true)}><HistoryIcon /></IconButton>
       <Drawer open={open} onClose={toggleDrawer(false)}>
         {DrawerList}
       </Drawer>
-    </div>
+    </>
   );
 }

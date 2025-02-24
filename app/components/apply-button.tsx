@@ -1,5 +1,5 @@
 'use client'
-import { Button, CardActions, Dialog, DialogContent, Typography } from "@mui/material";
+import { Button, CardActions, Dialog, DialogContent, Snackbar, Typography } from "@mui/material";
 import { Course } from "../type";
 import { useState } from "react";
 import ApplyForm from "./apply-form";
@@ -9,7 +9,10 @@ export default function ApplyButton({
 }: {
   course: Course,
 }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
+  const [noticeOpen, setNoticeOpen] = useState(false)
+  const [noticeMsg, setNoticeMsg] = useState('false')
+
   const handleSubmit = async (formData?: FormData) => {
     if (formData) {
       try {
@@ -21,8 +24,12 @@ export default function ApplyButton({
         if (res.status >= 400) {
           throw await res.json()
         }
+        setNoticeMsg('apply succeed')
+        setNoticeOpen(true)
         setOpen(false)
-      } catch (error) {
+      } catch (error: unknown) {
+        setNoticeMsg(error ? (error as { message: string }).message : 'save failed')
+        setNoticeOpen(true)
         console.error(error)
       }
     } else {
@@ -46,6 +53,12 @@ export default function ApplyButton({
           <ApplyForm onSubmit={handleSubmit} />
         </DialogContent>
       </Dialog>
+      <Snackbar
+        open={noticeOpen}
+        autoHideDuration={3000}
+        onClose={() => setNoticeOpen(false)}
+        message={noticeMsg}
+      />
     </>
     
   )
